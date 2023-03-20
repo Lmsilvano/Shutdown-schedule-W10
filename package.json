@@ -1,5 +1,35 @@
 {
+  "name": "shutdownschedule-w10",
+  "version": "1.0.0",
+  "description": "Um aplicativo para agendar o desligamento do Windows 10",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Leandro Silvano",
+  "license": "MIT",
   "devDependencies": {
     "electron": "^23.1.4"
+  },
+  "build": {
+    "productName": "Agendador de desligamento para Windows 10",
+    "appId": "com.shutdownschedule",
+    "directories": {
+      "output": "dist"
+    },
+    "mac": {
+      "category": "public.app-category.utilities"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
+    }
   }
 }
