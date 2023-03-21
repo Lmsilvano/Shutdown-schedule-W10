@@ -14,6 +14,18 @@ function createWindow() {
 
     win.loadFile('index.html');
 }
+function createTimerWindow() {
+    const timerWindow = new BrowserWindow({
+        width: 400,
+        height: 300,
+        webPreferences: {
+            nodeIntegration: true
+        }
+    });
+    timerWindow.loadFile('timer.html')
+}
+
+
 
 app.whenReady().then(() => {
     createWindow();
