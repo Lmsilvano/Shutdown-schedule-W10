@@ -17,17 +17,17 @@
       const cancelButton = document.getElementById('cancel-button')
 
       // Receba o tempo restante para desligamento da janela principal
-      ipcRenderer.on('set-shutdown-time', (event, shutdownTime) => {
-        let secondsLeft = Math.round((shutdownTime - Date.now()) / 1000)
-        countdown.innerText = secondsLeft
-        let countdownInterval = setInterval(() => {
-          secondsLeft--
-          countdown.innerText = secondsLeft
-          if (secondsLeft <= 0) {
-            clearInterval(countdownInterval)
-            window.close()
-          }
-        }, 1000)
+      ipcRenderer.on('atualizar-temporizador', (event, tempo) => {
+        //let secondsLeft = Math.round((tempo - Date.now()) / 1000)
+        countdown.innerText = `Olá marilene ${tempo}`
+        // let countdownInterval = setInterval(() => {
+        //   secondsLeft--
+        //   countdown.innerText = secondsLeft
+        //   if (secondsLeft <= 0) {
+        //     clearInterval(countdownInterval)
+        //     window.close()
+        //   }
+        // }, 1000)
       })
 
       // Envie uma mensagem de cancelamento para a janela principal quando o botão for clicado

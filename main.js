@@ -1,8 +1,11 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const { exec } = require('child_process');
+const utils = require('./utils')
+
+let timerWindow;
 
 function createWindow() {
-    const win = new BrowserWindow({
+    const mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
         webPreferences: {
@@ -12,11 +15,33 @@ function createWindow() {
         }
     });
 
-    win.loadFile('index.html');
+    mainWindow.loadFile('index.html');
+    return mainWindow
 }
 
+function createTimerWindow(tempo) {
 
+    const timerWindow = new BrowserWindow({
+        width: 400,
+        height: 200,
+        name: 'timer',
+        frame: false,
+        webPreferences: {
+            nodeIntegration: true
+        }
+    });
 
+    if (utils.isWindowOpen('timer')) {
+        console.info('foii if')
+        timerWindow.webContents.send('atualizar-temporizador', tempo)
+        return
+    } else {
+        console.info('foii else')
+        timerWindow.loadFile('timer.html')
+        timerWindow.webContents.send('atualizar-temporizador', tempo)
+        return timerWindow
+    }
+}
 
 app.whenReady().then(() => {
     createWindow();
@@ -29,22 +54,9 @@ app.whenReady().then(() => {
 app.on('window-all-closed', function () {
     if (process.platform !== 'darwin') app.quit();
 });
-let timerWindow = new BrowserWindow({
-    width: 400,
-    height: 200,
-    frame: false,
-    webPreferences: {
-        nodeIntegration: true
-    }
-});
 
-// Carregue a página do timer na janela
-timerWindow.loadFile('timer.html');
 
-// Defina o tempo restante para desligamento
-timerWindow.webContents.on('did-finish-load', () => {
-    timerWindow.webContents.send('set-shutdown-time', shutdownTime);
-});
+
 
 // Agendar desligamento
 function agendarDesligamento(tempo) {
@@ -63,6 +75,7 @@ function agendarDesligamento(tempo) {
 // Lidar com o envio do formulário
 ipcMain.on('agendar-desligamento', (evento, tempo) => {
     agendarDesligamento(tempo);
+    createTimerWindow(tempo);
 });
 ipcMain.on('cancelar-desligamento', (evento) => {
     exec('shutdown /a', (err, stdout, stderr) => {
