@@ -14,16 +14,7 @@ function createWindow() {
 
     win.loadFile('index.html');
 }
-function createTimerWindow() {
-    const timerWindow = new BrowserWindow({
-        width: 400,
-        height: 300,
-        webPreferences: {
-            nodeIntegration: true
-        }
-    });
-    timerWindow.loadFile('timer.html')
-}
+
 
 
 
@@ -37,6 +28,22 @@ app.whenReady().then(() => {
 
 app.on('window-all-closed', function () {
     if (process.platform !== 'darwin') app.quit();
+});
+let timerWindow = new BrowserWindow({
+    width: 400,
+    height: 200,
+    frame: false,
+    webPreferences: {
+        nodeIntegration: true
+    }
+});
+
+// Carregue a página do timer na janela
+timerWindow.loadFile('timer.html');
+
+// Defina o tempo restante para desligamento
+timerWindow.webContents.on('did-finish-load', () => {
+    timerWindow.webContents.send('set-shutdown-time', shutdownTime);
 });
 
 // Agendar desligamento
