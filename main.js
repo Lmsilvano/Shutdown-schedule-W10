@@ -1,8 +1,8 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, ipcRenderer } = require('electron');
 const { exec } = require('child_process');
 const utils = require('./utils')
 
-let timerWindow;
+
 
 function createWindow() {
     const mainWindow = new BrowserWindow({
@@ -21,25 +21,26 @@ function createWindow() {
 
 function createTimerWindow(tempo) {
 
-    const timerWindow = new BrowserWindow({
-        width: 400,
-        height: 200,
-        name: 'timer',
-        frame: false,
-        webPreferences: {
-            nodeIntegration: true
-        }
-    });
-
-    if (utils.isWindowOpen('timer')) {
-        console.info('foii if')
-        timerWindow.webContents.send('atualizar-temporizador', tempo)
-        return
-    } else {
+    if (utils.isWindowOpen()) {
         console.info('foii else')
+        const timerWindow = new BrowserWindow({
+            width: 400,
+            height: 200,
+            name: 'timer',
+            // frame: false,
+            webPreferences: {
+                nodeIntegration: true,
+                contextIsolation: false,
+                enableRemoteModule: true,
+            }
+        });
         timerWindow.loadFile('timer.html')
-        timerWindow.webContents.send('atualizar-temporizador', tempo)
         return timerWindow
+
+    } else {
+        //timerWindow.webContents.send('atualizar-temporizador', tempo)
+        return
+
     }
 }
 
@@ -75,15 +76,28 @@ function agendarDesligamento(tempo) {
 // Lidar com o envio do formulário
 ipcMain.on('agendar-desligamento', (evento, tempo) => {
     agendarDesligamento(tempo);
-    createTimerWindow(tempo);
+    createTimerWindow(tempo)
+    ipcMain.on('carregamento-concluido', function () {
+        console.log('bateu no carregamento')
+        const timerWindow = BrowserWindow.getAllWindows()[0]
+        timerWindow.webContents.send('atualizar-temporizador', tempo)
+    });
+
 });
+
+
 ipcMain.on('cancelar-desligamento', (evento) => {
     exec('shutdown /a', (err, stdout, stderr) => {
         if (err) {
             console.error(err);
             return;
         }
-
+        const timerWindow = BrowserWindow.getAllWindows()[0]
+        timerWindow.close()
         console.log(stdout);
     });
 });
+
+
+
+

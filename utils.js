@@ -2,16 +2,14 @@ const { BrowserWindow } = require('electron');
 module.exports = {
 
 
-    isWindowOpen(windowName) {
+    isWindowOpen() {
         const windows = BrowserWindow.getAllWindows()
-        console.log(windows[1], 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
-        for (let i = 0; i < windows.length; i++) {
-            console.log(windows[i].name, 'laçoooooooo de repetição')
-            if (windows[i].name === windowName) {
-                return true
-            }
+        console.info('Tamanho do windows:' + windows.length)
+        if (windows.length >= 2) {
+            return false
         }
-        return false
+        else return true
     }
 
 }
+

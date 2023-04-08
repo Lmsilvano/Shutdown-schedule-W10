@@ -1,40 +1,11 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Timer</title>
-  </head>
-  <body>
-    <h1>
-      Desligando em
-      <span id="countdown"></span>
-      segundos
-    </h1>
-    <button id="cancel-button">Cancelar desligamento</button>
-    <script>
-      const { ipcRenderer } = require('electron')
-      const countdown = document.getElementById('countdown')
-      const cancelButton = document.getElementById('cancel-button')
-
-      // Receba o tempo restante para desligamento da janela principal
-      ipcRenderer.on('atualizar-temporizador', (event, tempo) => {
-        //let secondsLeft = Math.round((tempo - Date.now()) / 1000)
-        countdown.innerText = `Olá marilene ${tempo}`
-        // let countdownInterval = setInterval(() => {
-        //   secondsLeft--
-        //   countdown.innerText = secondsLeft
-        //   if (secondsLeft <= 0) {
-        //     clearInterval(countdownInterval)
-        //     window.close()
-        //   }
-        // }, 1000)
-      })
-
-      // Envie uma mensagem de cancelamento para a janela principal quando o botão for clicado
-      cancelButton.addEventListener('click', () => {
-        ipcRenderer.send('cancel-shutdown')
-        window.close()
-      })
-    </script>
-  </body>
-</html>
+<body onload="definirTemporizador()">
+  <h1>
+    Desligando em
+    <span id="contador"></span>
+    segundos
+  </h1>
+  <button id="cancelar-timer" onclick="cancelarDesligamento()">
+    Cancelar desligamento
+  </button>
+  <script src="./renderer.js"></script>
+</body>
