@@ -9,7 +9,7 @@
   "author": "Leandro Silvano",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^23.1.4"
+    "electron": "^23.3.13"
   },
   "build": {
     "productName": "Agendador de desligamento para Windows 10",
